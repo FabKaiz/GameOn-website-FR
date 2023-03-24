@@ -15,6 +15,9 @@ const closeBtn = document.querySelector(".close");
 const contentModal = document.querySelector(".content");
 const btnSubmit = document.querySelector(".btn-submit");
 
+// Form state
+let isValid = true;
+
 const closeModal = () => {
   // Add animation class to modal
   contentModal.classList.add("close-animation");
@@ -41,73 +44,91 @@ function launchModal() {
   modalbg.style.display = "block";
 }
 
+const setErrorMessage = (input, message) => {
+  isValid = false;
+  // if span element already exists return
+  if (input.parentNode.nextElementSibling.classList.contains('error-message')) return;
+
+  // add red outline to input
+  input.style.outline = '1px solid red';
+
+  // Create span element to display error message
+  const span = document.createElement('span');
+  span.classList.add('error-message');
+  span.innerText = message;
+
+  // insert next to the parentnode
+  input.parentNode.insertAdjacentElement('afterend', span);
+}
+
+const removeErrorMessage = (input) => {
+  if (input.parentNode.nextElementSibling.classList.contains('error-message')) {
+    input.parentNode.nextElementSibling.remove();
+    input.style.outline = 'none';
+  }
+}
+// Check if there is any error message
+const checkFormErrors = () => {
+  document.getElementsByClassName('error-message').length > 0 ? isValid = false : isValid = true;
+}
+
 function validate() {
   // Get all form inputs
-  const first = document.getElementById('first');
-  const last = document.getElementById('last');
-  const email = document.getElementById('email');
-  const location = document.querySelector('input[name="location"]:checked');
-  const quantity = document.getElementById('quantity');
-  const terms = document.getElementById('checkbox1');
+  const first          = document.getElementById('first'),
+        last           = document.getElementById('last'),
+        email          = document.getElementById('email'),
+        birthdate      = document.getElementById('birthdate'),
+        quantity       = document.getElementById('quantity'),
+        locationInputs = document.getElementsByName('location'),
+        terms          = document.getElementById('checkbox1');
 
-  let isValid = true;
 
   // Check for first name
   if (first.value === '' || first.value.length < 2) {
-    isValid = false;
-    first.classList.add('error');
+    setErrorMessage(first, 'Vous devez entrer 2 caractères ou plus pour le champ du prénom.')
   } else {
-    first.classList.remove('error');
+    removeErrorMessage(first);
   }
 
   // Check for last name
   if (last.value === '' || last.value.length < 2) {
-    isValid = false;
-    last.classList.add('error');
+    setErrorMessage(last, 'Vous devez entrer 2 caractères ou plus pour le champ du nom.')
   } else {
-    last.classList.remove('error');
+    removeErrorMessage(last)
   }
 
   // Check for email
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!emailRegex.test(email.value)) {
-    isValid = false;
-    email.classList.add('error');
+    setErrorMessage(email, 'Vous devez entrer une adresse email valide. (exemple: toto@gmail.com)');
   } else {
-    email.classList.remove('error');
+    removeErrorMessage(email);
   }
 
-  // Check for number of tournaments and if it's a number
-  const quantityRegex = /^[0-9]+$/;
+  // Check for birthdate
+  const birthdateRegex = /^[0-9]{4}-[0-9]{2}-[0-9]{2}$/;
+  if (!birthdateRegex.test(birthdate.value)) {
+    setErrorMessage(birthdate, 'Vous devez entrer votre date de naissance valide. (exemple: 01-23-1990)');
+  } else {
+    removeErrorMessage(birthdate);
+  }
+
+  // Check for number of tournaments and if it's a number between 0 and 99
+  const quantityRegex = /^[0-9]{1,2}$/;
   if (!quantityRegex.test(quantity.value) || quantity.value === '') {
-    isValid = false;
-    quantity.classList.add('error');
+    setErrorMessage(quantity, 'Vous devez entrer un nombre entre 0 et 99.')
   } else {
-    quantity.classList.remove('error');
+    removeErrorMessage(quantity);
   }
 
-  // Check for tournament location is checked
-  if (location === null) {
-    isValid = false;
-    const locationInputs = document.getElementsByName('location');
-    locationInputs.forEach(function (input) {
-      input.classList.add('error');
-    });
-  } else {
-    const locationInputs = document.getElementsByName('location');
-    locationInputs.forEach(function (input) {
-      input.classList.remove('error');
-    });
-  }
+  // Check if at least one location is checked
+  const isAllFalse = Array.from(locationInputs).every((input) => !input.checked); // check if all inputs are false
+  (isAllFalse) ? setErrorMessage(locationInputs[0], 'Vous devez choisir une ville.') : removeErrorMessage(locationInputs[0]);
 
-  // Check for terms and conditions
-  if (!terms.checked) {
-    isValid = false;
-    terms.classList.add('error');
-  } else {
-    terms.classList.remove('error');
-  }
+  // check if term checkbox is checked
+  !terms.checked ? setErrorMessage(terms, 'Vous devez vérifier que vous acceptez les termes et conditions.') : removeErrorMessage(terms);
 
+  checkFormErrors();
   return isValid;
 }
 
@@ -117,8 +138,5 @@ btnSubmit.addEventListener("click", (e) => {
   if (validate()) {
     closeModal();
     // TODO: Add success message
-  } else {
-    console.log('Formulaire invalide');
-    //TODO: Add error message
   }
 });
