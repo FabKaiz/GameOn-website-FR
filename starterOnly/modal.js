@@ -14,8 +14,6 @@ const formData = document.querySelectorAll(".formData");
 const closeBtn = document.querySelector(".close");
 const contentModal = document.querySelector(".content");
 
-console.log(contentModal);
-
 const closeModal = () => {
   // Add animation class to modal
   contentModal.classList.add("close-animation");
