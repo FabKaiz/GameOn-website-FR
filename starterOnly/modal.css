@@ -130,7 +130,6 @@ main {
   background: #fe142f;
   display: flex;
   margin: auto;
-  padding: 2em;
   color: #fff;
   padding: 0.75rem 2.5rem;
   border-radius: 1rem;
@@ -201,6 +200,7 @@ main {
 .modal-body {
   padding: 15px 8%;
   margin: 15px auto;
+  transition: opacity 0.3s ease-in-out;
 }
 
 label {
@@ -374,10 +374,26 @@ input[data-error]::after {
   text-align: center;
 }
 
+.success-message {
+  height: 710px;
+  max-width: 75%;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  justify-content: center;
+
+  font-family: var(--font-default);
+  font-style: normal;
+  font-weight: 400;
+  font-size: 36px;
+  line-height: 142.6%;
+}
+
 /* custom select styles */
 .custom-select {
   position: relative;
-  font-family: Arial;
+  font-family: Arial, sans-serif;
   font-size: 1.1rem;
   font-weight: normal;
 }
@@ -415,7 +431,8 @@ input[data-error]::after {
 .select-selected {
   color: #000;
   padding: 11px 16px;
-  border: 1px solid transparent;
+  border-width: 1px;
+  border-style: solid;
   border-color: transparent transparent rgba(0, 0, 0, 0.1) transparent;
   cursor: pointer;
   border-radius: 8px;

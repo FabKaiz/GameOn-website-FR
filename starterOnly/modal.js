@@ -1,5 +1,5 @@
 function editNav() {
-  var x = document.getElementById("myTopnav");
+  const x = document.getElementById("myTopnav");
   if (x.className === "topnav") {
     x.className += " responsive";
   } else {
@@ -10,9 +10,9 @@ function editNav() {
 // DOM Elements
 const modalbg = document.querySelector(".bground");
 const modalBtn = document.querySelectorAll(".modal-btn");
-const formData = document.querySelectorAll(".formData");
 const closeBtn = document.querySelector(".close");
 const contentModal = document.querySelector(".content");
+const modalBody = document.querySelector(".modal-body");
 const btnSubmit = document.querySelector(".btn-submit");
 
 // Form state
@@ -132,11 +132,28 @@ function validate() {
   return isValid;
 }
 
+const showSuccessMessage = () => {
+  // Get modal height to set it to the success message to avoir content jumping
+  const modalHeight = contentModal.offsetHeight;
+
+  // put form opacity to 0
+  modalBody.style.opacity = '0';
+
+  // Remove form after .3s and create and display success message after
+  setTimeout(() => {
+    contentModal.removeChild(contentModal.children[1]);
+    const successMessage = document.createElement('div');
+    successMessage.classList.add('success-message');
+    successMessage.style.height = `${modalHeight}px`;
+    successMessage.innerText = 'Merci pour votre inscription';
+    contentModal.appendChild(successMessage);
+  }, 300);
+}
+
 // Check if form is valid and submit or display error message
 btnSubmit.addEventListener("click", (e) => {
   e.preventDefault();
   if (validate()) {
-    closeModal();
-    // TODO: Add success message
+    showSuccessMessage();
   }
 });
