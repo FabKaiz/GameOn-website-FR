@@ -31,6 +31,8 @@ const closeModal = () => {
     contentModal.classList.remove("close-animation");
     modalbg.style.display = "none";
   }, convertedAnimationDuration);
+
+  document.body.style.overflow = "auto";
 }
 
 // Close modal event
@@ -42,6 +44,7 @@ modalBtn.forEach((btn) => btn.addEventListener("click", launchModal));
 // launch modal form
 function launchModal() {
   modalbg.style.display = "block";
+  document.body.style.overflow = "hidden";
 }
 
 const setErrorMessage = (input, message) => {
