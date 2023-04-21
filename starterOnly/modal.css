@@ -419,6 +419,7 @@ input {
 
 .hero-section {
   height: calc(100vh - (150px * 2));
+  min-height: 630px;
   border-radius: 10px;
   display: grid;
   grid-template-columns: repeat(12, 1fr);
